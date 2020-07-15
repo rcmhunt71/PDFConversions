@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/DD_Mortgage Director_proposal.pdf
+
+# Project Specific Files
+*.pdf

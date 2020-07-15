@@ -1,0 +1,3 @@
+pdf2image
+
+# Poppler (Refer to link for more details: https://pdf2image.readthedocs.io/en/latest/installation.html)
