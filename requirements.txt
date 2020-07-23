@@ -1,3 +1,13 @@
+# Attempt 1
 pdf2image
 
+# External Requirements
 # Poppler (Refer to link for more details: https://pdf2image.readthedocs.io/en/latest/installation.html)
+
+
+
+# Attempt 2
+python3-ghostscript
+
+# External Requirements
+# https://www.ghostscript.com/
