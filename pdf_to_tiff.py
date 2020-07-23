@@ -220,7 +220,7 @@ if __name__ == '__main__':
 
     # Determine which PDF (absolute path) to use, based on big_pdf boolean
     pdf_file = "./pdfs/ddmdp.pdf" if big_pdf else "./pdfs/lflm.pdf"
-    pdf_file_spec = os.path.abspath(pdf_file)
+    pdf_filespec = os.path.abspath(pdf_file)
 
     # Mapping algorithm type to concrete class
     sub_path_mapping = {"gs": GhostscriptPDF2Tiff, "pdf2tiff": PDFtoTiff}
@@ -238,7 +238,7 @@ if __name__ == '__main__':
 
         # Execute the conversion and record the time
         for _ in range(iterations):
-            pdf_converter = conversion_class(pdf_file_spec, output_file=outfile, threads=num_threads)
+            pdf_converter = conversion_class(pdf_filespec, output_file=outfile, threads=num_threads)
             stats[sub_path].append(pdf_converter.convert_to_image().timing)
 
     # Determine and print the stats (Min, Max, Avg, Multiplier change)
