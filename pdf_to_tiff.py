@@ -52,9 +52,9 @@ class PDFtoTiff(BasePDFConversion):
                     paths_only=self.paths_only,
                 )
             except (pdf_exc.PDFInfoNotInstalledError, pdf_exc.PDFPageCountError, pdf_exc.PDFSyntaxError) as exc:
-                return f"RUT-ROH: ({exc.__class__.__name__}): {exc}"
+                return f"ERROR: ({exc.__class__.__name__}): {exc}"
             except pdf_exc.PopplerNotInstalledError as exc:
-                return f"RUT-ROH: {exc}"
+                return f"ERROR: {exc}"
             self.timing = perf_counter() - start
             print(f"{self.name}: Conversion took: {self.timing:0.6f} seconds.")
         else:
@@ -91,7 +91,7 @@ class GhostscriptPDF2Tiff(BasePDFConversion):
                 f"-q",
                 f"-sDEVICE={self.image_format}",
                 f"-r{self.dpi}",
-                f"-sOutputFile={os.path.abspath(f'{self.output_file}-%00d.tiff')}",
+                f"-sOutputFile={os.path.abspath(f'{self.output_file}-%00d.tif')}",
                 f"{self.pdf_file_spec}",
             ]
             encoding = locale.getpreferredencoding()
@@ -118,15 +118,16 @@ if __name__ == '__main__':
     output_dir = "tiffs"
     big_pdf = True
     num_threads = 5
-    iterations = 5
+    iterations = 1
     stats = {}
     pdf_file = "./pdfs/ddmdp.pdf" if big_pdf else "./pdfs/lflm.pdf"
     pdf_file_spec = os.path.abspath(pdf_file)
     sub_path_mapping = {"gs": GhostscriptPDF2Tiff, "pdf2tiff": PDFtoTiff}
 
     for sub_path, conversion_class in sub_path_mapping.items():
-        outfile = os.path.abspath(os.path.sep.join([output_dir, sub_path, f"{pdf_file.split('.')[0]}"]))
-        print(f"\nINPUT FILE:  {pdf_file}\nOUTPUT DIR: {outfile}\nLarge PDF? {big_pdf}\nThreads: {num_threads}")
+        outfile = os.path.abspath(os.path.sep.join(
+            [output_dir, sub_path, f"{pdf_file.split(os.path.sep)[-1].split('.')[0]}"]))
+        print(f"\nINPUT FILE:  {pdf_file}\nOUTPUT DIR: {outfile}.*\nLarge PDF? {big_pdf}\nThreads: {num_threads}")
         stats[sub_path] = []
         for _ in range(iterations):
             pdf_converter = conversion_class(pdf_file_spec, output_file=outfile, threads=num_threads)
@@ -137,7 +138,6 @@ if __name__ == '__main__':
         avg = sum(data) / len(data)
         print(f"{key}:\n"
               f"\tIterations: {len(data)}\n"
-              # f"\tTimes: {', '.join([str(x) for x in data])}\n"
               f"\tAvg: {avg:0.4f} sec\n"
               f"\tMin: {min(data):0.4f} sec\n"
               f"\tMax: {max(data):0.4f} sec\n")
