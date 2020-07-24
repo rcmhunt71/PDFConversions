@@ -43,7 +43,7 @@ class BasePDFConversion:
             raise Exception("BasePDFConversion: Image format or extension is not set.")
 
         # Used for tracking the time required to convert the pdf to image.
-        self.timing = 0
+        self.conversion_duration = 0
 
         # Used for providing which class through an exception.
         self.name = __class__.__name__
@@ -87,11 +87,9 @@ class PDFtoTiff(BasePDFConversion):
         :return: self (allows chaining of methods, since the methods do not return any additional info).
 
         """
-
-        # If the PDF file is found...
         if os.path.exists(self.pdf_file_spec):
 
-            start = perf_counter()
+            start_conversion = perf_counter()
 
             # Actual pdf2image call
             try:
@@ -111,8 +109,8 @@ class PDFtoTiff(BasePDFConversion):
                 return f"ERROR: {exc}"
 
             # Measure time to convert the PDF to image files.
-            self.timing = perf_counter() - start
-            print(f"{self.name}: Conversion took: {self.timing:0.6f} seconds.")
+            self.conversion_duration = perf_counter() - start_conversion
+            print(f"{self.name}: Conversion took: {self.conversion_duration:0.6f} seconds.")
 
         # Specified PDF was not found.
         else:
@@ -168,10 +166,8 @@ class GhostscriptPDF2Tiff(BasePDFConversion):
         :return: self (allows chaining of methods, since the methods do not return any additional info).
 
         """
-
-        # If the PDF file is found...
         if os.path.exists(self.pdf_file_spec):
-            start = perf_counter()
+            start_conversion = perf_counter()
             args = [
                 "pdf2tiff",
                 "-dNOPAUSE",
@@ -198,8 +194,8 @@ class GhostscriptPDF2Tiff(BasePDFConversion):
                 print(f"\tERROR ({self.name}): Exception: {exc}")
 
             # Measure time to convert the PDF to image files.
-            self.timing = perf_counter() - start
-            print(f"{self.name}: Conversion took: {self.timing:0.4f} seconds.")
+            self.conversion_duration = perf_counter() - start_conversion
+            print(f"{self.name}: Conversion took: {self.conversion_duration:0.4f} seconds.")
 
         # Specified PDF was not found.
         else:
@@ -239,7 +235,7 @@ if __name__ == '__main__':
         # Execute the conversion and record the time
         for _ in range(iterations):
             pdf_converter = conversion_class(pdf_filespec, output_file=outfile, threads=num_threads)
-            stats[sub_path].append(pdf_converter.convert_to_image().timing)
+            stats[sub_path].append(pdf_converter.convert_to_image().conversion_duration)
 
     # Determine and print the stats (Min, Max, Avg, Multiplier change)
     avgs = []
