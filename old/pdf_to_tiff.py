@@ -17,6 +17,7 @@ class BasePDFConversion:
 
     IMAGE_FORMAT = None     # Specify the expected/default format.
     IMAGE_EXTENSION = None  # Specify the expected/default file extension.
+    MAX_FILES = 1000        # Max Number of possible images from single PDF
 
     def __init__(self, pdf_file_spec, output_file=None, dpi=200, threads=5, output_folder='.', extension=None):
         """
@@ -63,7 +64,7 @@ class PDFtoTiff(BasePDFConversion):
     IMAGE_FORMAT = 'tiff'
     IMAGE_EXTENSION = "tif"
 
-    def __init__(self, pdf_file_spec, output_file=None, dpi=200, threads=5, output_folder='.', extension=None):
+    def __init__(self, pdf_file_spec, output_file=None, dpi=200, threads=4, output_folder='.', extension=None):
         """
         Init - Super() does most work, but needed to add class name, which is used when throwing exceptions.
 
@@ -78,6 +79,7 @@ class PDFtoTiff(BasePDFConversion):
         super().__init__(
             pdf_file_spec, output_file=output_file, dpi=dpi, threads=threads, output_folder=output_folder,
             extension=extension)
+        self.image_names = []
         self.name = __class__.__name__
 
     def convert_to_image(self):
@@ -89,28 +91,30 @@ class PDFtoTiff(BasePDFConversion):
         """
         if os.path.exists(self.pdf_file_spec):
 
+            filename = self.pdf_file_spec.split(os.path.sep)[-1].split('.')[0]
             start_conversion = perf_counter()
 
             # Actual pdf2image call
             try:
-                pdf2image.convert_from_path(
+                self.image_names = pdf2image.convert_from_path(
                     self.pdf_file_spec,
                     dpi=self.dpi,
                     fmt=self.fmt,
-                    thread_count=self.threads,
-                    output_file=f'{self.output_file}.{self.extension}',
+                    thread_count=num_threads,
                     output_folder=self.output_folder,
+                    paths_only=True,
                 )
 
             except (pdf_exc.PDFInfoNotInstalledError, pdf_exc.PDFPageCountError, pdf_exc.PDFSyntaxError) as exc:
                 return f"ERROR: ({exc.__class__.__name__}): {exc}"
 
             except pdf_exc.PopplerNotInstalledError as exc:
-                return f"ERROR: {exc}"
+                return f"ERROR: ({exc.__class__.__name__}): {exc}"
 
             # Measure time to convert the PDF to image files.
             self.conversion_duration = perf_counter() - start_conversion
             print(f"{self.name}: Conversion took: {self.conversion_duration:0.6f} seconds.")
+            print(f"{self.name}: Num images: {len(self.image_names)}")
 
         # Specified PDF was not found.
         else:
@@ -207,9 +211,9 @@ class GhostscriptPDF2Tiff(BasePDFConversion):
 if __name__ == '__main__':
     " TESTING ROUTINE - executed as this script"
 
-    output_dir = "tiffs"  # Base Relative Directory for storing resulting images
+    output_dir = "../tiffs"  # Base Relative Directory for storing resulting images
     big_pdf = True        # Which PDF should be tested (6 pages vs 25 pages)
-    num_threads = 5       # Number of threads to use in conversion process
+    num_threads = 4       # Number of threads to use in conversion process
     iterations = 1        # Number of test iterations to build sample
 
     stats = {}            # Store timing results (k: conversion_process, v: timings)
@@ -219,23 +223,31 @@ if __name__ == '__main__':
     pdf_filespec = os.path.abspath(pdf_file)
 
     # Mapping algorithm type to concrete class
-    sub_path_mapping = {"gs": GhostscriptPDF2Tiff, "pdf2tiff": PDFtoTiff}
+    sub_path_mapping = {
+        # "gs": GhostscriptPDF2Tiff,
+        "pdf2tiff": PDFtoTiff
+    }
 
     # For each algorithm, convert the PDF 'iteration' times and record the conversions times.
     for sub_path, conversion_class in sub_path_mapping.items():
 
         # Determine the output file spec
-        outfile = os.path.abspath(os.path.sep.join(
-            [output_dir, sub_path, f"{pdf_file.split(os.path.sep)[-1].split('.')[0]}"]))
+        output_image_dir = os.path.abspath(os.path.sep.join([output_dir, sub_path]))
+        outfile = os.path.sep.join([output_image_dir, f"{pdf_file.split(os.path.sep)[-1].split('.')[0]}"])
         print(f"\nINPUT FILE:  {pdf_file}\nOUTPUT DIR: {outfile}.*\nLarge PDF? {big_pdf}\nThreads: {num_threads}")
 
         # Initialize the algorithm conversion time list.
         stats[sub_path] = []
 
         # Execute the conversion and record the time
+        pdf_converter = None
         for _ in range(iterations):
-            pdf_converter = conversion_class(pdf_filespec, output_file=outfile, threads=num_threads)
+            pdf_converter = conversion_class(
+                pdf_filespec, output_file=outfile, threads=num_threads, output_folder=output_image_dir)
             stats[sub_path].append(pdf_converter.convert_to_image().conversion_duration)
+            if hasattr(pdf_converter, 'image_names'):
+                print(f"Number of unique image files: {len(set(pdf_converter.image_names))}")
+                print(f"Unique Image files: {set(pdf_converter.image_names)}")
 
     # Determine and print the stats (Min, Max, Avg, Multiplier change)
     avgs = []
@@ -247,4 +259,6 @@ if __name__ == '__main__':
               f"\tMin: {min(data):0.4f} sec\n"
               f"\tMax: {max(data):0.4f} sec\n")
         avgs.append(avg)
-    print(f"There is a factor of {avgs[0]/avgs[1]:0.2f} difference based on the average.")
+    if len(stats.keys()) > 1:
+        print(f"There is a factor of {avgs[0]/avgs[1]:0.2f} difference based on the average.")
+
