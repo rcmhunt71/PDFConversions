@@ -21,7 +21,8 @@ class TiffToWebp(BaseImageFormatConverter):
     DEFAULT_QUALITY = 90
 
     def __init__(self, src_file_spec: str, output_file: str = None, dpi: int = 0, threads: int = 0,
-                 output_folder: str = '.', extension: str = None, lossless: bool = None, quality: int = -1) -> None:
+                 output_folder: str = '.', extension: str = None, lossless: bool = None, quality: int = -1,
+                 **kwargs) -> None:
         """
         Init - Super() does most work, but needed to add class name, which is used when throwing exceptions.
 
@@ -34,6 +35,7 @@ class TiffToWebp(BaseImageFormatConverter):
         :param lossless: (bool) - Do lossless conversion (more expensive, more accurate)
         :param quality: (int: 0 - 100) - Quality for non-lossless, compression for lossless.
               see class description for more detail.
+        :param kwargs: Any extra args (from ability to overload other subclasses)
 
         """
         super().__init__(src_file_spec=src_file_spec, output_file=output_file, output_folder=output_folder,

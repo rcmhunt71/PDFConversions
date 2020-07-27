@@ -8,7 +8,7 @@ source_pdf = './pdfs/ddmdp.pdf'
 image_dir = "./tiffs/pdf2tiff"
 
 pdf = Document(source_pdf, conversion_dir=image_dir)
-PDFConversion(pdf).convert(SupportedDocTypes.WEBP, lossless=False)
+PDFConversion(pdf).convert(SupportedDocTypes.WEBP, lossless=False, dpi=100)
 
 print(f"LIST OF TIFFs:\n{pdf.tiffs}")
 print(f"LIST OF WEBPs:\n{pdf.webps}")

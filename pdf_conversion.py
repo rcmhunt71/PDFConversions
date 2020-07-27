@@ -33,13 +33,13 @@ class PDFConversion:
             return self
 
         if doc_format in [SupportedDocTypes.WEBP, SupportedDocTypes.TIFF]:
-            self._convert_pdf_to_tiff()
+            self._convert_pdf_to_tiff(**kwargs)
 
         if doc_format == SupportedDocTypes.WEBP:
             self._convert_tiff_to_webp(**kwargs)
 
-    def _convert_pdf_to_tiff(self) -> typing.NoReturn:
-        converter = PdfToTiff(src_file_spec=self.document.filespec, output_folder=self.document.image_dir)
+    def _convert_pdf_to_tiff(self, **kwargs) -> typing.NoReturn:
+        converter = PdfToTiff(src_file_spec=self.document.filespec, output_folder=self.document.image_dir, **kwargs)
         converter.convert()
         self.document.images.extend(converter.images)
         self.document.conversion_duration = converter.conversion_duration
