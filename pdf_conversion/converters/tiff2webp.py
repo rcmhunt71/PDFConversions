@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import os
 from time import perf_counter
 
@@ -52,6 +50,7 @@ class TiffToWebp(BaseImageFormatConverter):
         """
         webp_filename = f"{os.path.split(self.src_file_spec)[-1].split('.')[0]}.{self.IMAGE_EXTENSION}"
         webp_filespec = os.path.sep.join([self.output_folder, webp_filename])
+
         try:
             start_time = perf_counter()
             with Image.open(self.src_file_spec) as IMAGE:
@@ -61,8 +60,11 @@ class TiffToWebp(BaseImageFormatConverter):
                   f"Conversion to {self.IMAGE_FORMAT}: {self.conversion_duration:0.3f} seconds")
             print(f"\t{self.__class__.__name__}: "
                   f"LOSSLESS? {str(self.lossless)}    QUALITY: {self.quality}%")
+
         except OSError as exc:
             print(f"{self.__class__.__name__}: ERROR: Unable to convert '{self.src_file_spec}: {exc}")
+
         else:
             self.images.append(webp_filespec)
+
         return self

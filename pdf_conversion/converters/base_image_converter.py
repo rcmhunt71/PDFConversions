@@ -30,7 +30,7 @@ class BaseImageFormatConverter:
         self.fmt = self.IMAGE_FORMAT
         self.extension = extension or self.IMAGE_EXTENSION
 
-        # If the format or extension is not provide, do not continue.
+        # If the format or extension is not provided, do not continue.
         if self.fmt is None or self.extension is None:
             raise Exception(f"{self.__class__.__name__}: Image format or extension is not set.")
 
