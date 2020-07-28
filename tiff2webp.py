@@ -9,6 +9,7 @@ from PIL import Image
 from base_image_converter import BaseImageFormatConverter
 from file_extensions import SupportedDocTypes
 
+
 class TiffToWebp(BaseImageFormatConverter):
     IMAGE_FORMAT = SupportedDocTypes.WEBP.value
     IMAGE_EXTENSION = SupportedDocTypes.WEBP.value
@@ -44,6 +45,12 @@ class TiffToWebp(BaseImageFormatConverter):
         self.quality = quality if quality > -1 else self.DEFAULT_QUALITY
 
     def convert(self) -> "TiffToWebp":
+        """
+        Convert the TIFF to webp image.
+
+        :return: self (allows chaining of methods, since the methods do not return any additional info).
+
+        """
         webp_filename = f"{os.path.split(self.src_file_spec)[-1].split('.')[0]}.{self.IMAGE_EXTENSION}"
         webp_filespec = os.path.sep.join([self.output_folder, webp_filename])
         try:

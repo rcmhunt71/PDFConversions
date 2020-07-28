@@ -41,4 +41,9 @@ class BaseImageFormatConverter:
         self.images = []
 
     def convert(self) -> typing.NoReturn:
+        # Implemented instance of this function should return the instance of the obj
+        # e.g. -
+        # def convert():
+        #   <code>
+        #   return self
         raise NotImplementedError
