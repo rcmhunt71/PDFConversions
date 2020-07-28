@@ -77,9 +77,9 @@ class PDFConversion:
         :return: None
 
         """
-        converter = PdfToTiff(src_file_spec=self.document.filespec, output_folder=self.document.image_dir, **kwargs)
+        converter = PdfToTiff(src_file_spec=self.document.filespec, output_folder=self.document.file_dir, **kwargs)
         converter.convert()
-        self.document.images.extend(converter.images)
+        self.document.files.extend(converter.images)
         self.document.conversion_duration = converter.conversion_duration
 
     def _convert_tiff_to_webp(self, **kwargs) -> typing.NoReturn:
@@ -95,13 +95,13 @@ class PDFConversion:
         """
         # Conversion of PDF to TIFF generates 1 TIFF per page. This information is stored in the Document class.
         # Iterate through Document.images metadata list to get the list of TIFF image file specs.
-        tiffs = [image for image in self.document.images if image.lower().endswith(SupportedDocTypes.TIFF.value)]
+        tiffs = [image for image in self.document.files if image.lower().endswith(SupportedDocTypes.TIFF.value)]
 
         # Convert each image, and store the information in the Document metadata.
         for image in tiffs:
-            converter = TiffToWebp(src_file_spec=image, output_folder=self.document.image_dir, **kwargs)
+            converter = TiffToWebp(src_file_spec=image, output_folder=self.document.file_dir, **kwargs)
             converter.convert()
-            self.document.images.extend(converter.images)
+            self.document.files.extend(converter.images)
             self.document.conversion_duration += converter.conversion_duration
 
 
