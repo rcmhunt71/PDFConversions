@@ -22,7 +22,7 @@ class TiffToWebp(BaseImageFormatConverter):
                  output_folder: str = '.', extension: str = None, lossless: bool = None, quality: int = -1,
                  **kwargs) -> None:
         """
-        Init - Super() does most work, but needed to add class name, which is used when throwing exceptions.
+        Init - Super() does most of the work; this class's __init__() stores conversion specific options.
 
         :param src_file_spec: File path and file name of the source file.
         :param output_file: Base filename for output image file names.
@@ -33,7 +33,8 @@ class TiffToWebp(BaseImageFormatConverter):
         :param lossless: (bool) - Do lossless conversion (more expensive, more accurate)
         :param quality: (int: 0 - 100) - Quality for non-lossless, compression for lossless.
               see class description for more detail.
-        :param kwargs: Any extra args (from ability to overload other subclasses)
+        :param kwargs: Any extra args (needed to support the ability to overload the base class __init___ in
+               other subclasses)
 
         """
         super().__init__(src_file_spec=src_file_spec, output_file=output_file, output_folder=output_folder,
