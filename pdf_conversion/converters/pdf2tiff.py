@@ -1,12 +1,11 @@
 from time import perf_counter
-import typing
 import os
 
 import pdf2image
 import pdf2image.exceptions as pdf_exc
 
-from base_image_converter import BaseImageFormatConverter
-from file_extensions import SupportedDocTypes
+from pdf_conversion.converters.base_image_converter import BaseImageFormatConverter
+from pdf_conversion.documents.file_extensions import SupportedDocTypes
 
 
 class PdfToTiff(BaseImageFormatConverter):
@@ -27,7 +26,8 @@ class PdfToTiff(BaseImageFormatConverter):
         """
         if os.path.exists(self.src_file_spec):
 
-            filename = self.src_file_spec.split(os.path.sep)[-1].split('.')[0]
+            # filename = self.src_file_spec.split(os.path.sep)[-1].split('.')[0]
+            # outfile_generator = (filename for _ in range(1000))
             start_conversion = perf_counter()
 
             # Actual pdf2image call
@@ -37,7 +37,7 @@ class PdfToTiff(BaseImageFormatConverter):
                     dpi=self.dpi,
                     fmt=self.fmt,
                     thread_count=self.threads,
-                    # output_file=(filename for _ in range(1000)),
+                    # output_file=outfile_generator,
                     output_folder=self.output_folder,
                     paths_only=True,
                 )
@@ -59,5 +59,3 @@ class PdfToTiff(BaseImageFormatConverter):
             print(f"Unable to find '{self.src_file_spec}'")
 
         return self
-
-

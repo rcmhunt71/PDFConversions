@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-from document import Document
-from pdf_conversion import PDFConversion
-from file_extensions import SupportedDocTypes
+from pdf_conversion.documents.document import Document
+from pdf_conversion.converters.pdf_conversion import PDFConversion
+from pdf_conversion.documents.file_extensions import SupportedDocTypes
 
-source_pdf = './pdfs/ddmdp.pdf'
-image_dir = "./tiffs/pdf2tiff"
+source_pdf = "../../data/pdfs/ddmdp.pdf"
+image_dir = "../../data/tiffs/pdf2tiff"
 
 pdf = Document(source_pdf, conversion_dir=image_dir)
 PDFConversion(pdf).convert(SupportedDocTypes.WEBP, lossless=False, dpi=100)

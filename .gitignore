@@ -131,6 +131,6 @@ dmypy.json
 
 # Project Specific Files
 *.pdf
-/tiffs/
-/pdfs/
+/data/tiffs/
+/data/pdfs/
 

@@ -3,7 +3,8 @@
 import os
 import typing
 
-from file_extensions import SupportedDocTypes
+from pdf_conversion.documents.file_extensions import SupportedDocTypes
+
 
 class Document:
     def __init__(self, file_spec: str, conversion_dir: str = None):

@@ -1,11 +1,11 @@
-#1/usr/bin/python
+#!/usr/bin/python
 
 import typing
 
-from document import Document
-from pdf2tiff import PdfToTiff
-from tiff2webp import TiffToWebp
-from file_extensions import SupportedDocTypes
+from pdf_conversion.documents.document import Document
+from pdf_conversion.documents.file_extensions import SupportedDocTypes
+from pdf_conversion.converters.pdf2tiff import PdfToTiff
+from pdf_conversion.converters.tiff2webp import TiffToWebp
 
 
 class NoTargetConversionType(Exception):

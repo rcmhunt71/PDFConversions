@@ -211,7 +211,7 @@ class GhostscriptPDF2Tiff(BasePDFConversion):
 if __name__ == '__main__':
     " TESTING ROUTINE - executed as this script"
 
-    output_dir = "../tiffs"  # Base Relative Directory for storing resulting images
+    output_dir = "../../data/tiffs"  # Base Relative Directory for storing resulting images
     big_pdf = True        # Which PDF should be tested (6 pages vs 25 pages)
     num_threads = 4       # Number of threads to use in conversion process
     iterations = 1        # Number of test iterations to build sample

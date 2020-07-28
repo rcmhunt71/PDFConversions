@@ -9,7 +9,7 @@ class BaseImageFormatConverter:
     DEFAULT_THREADS = 1
 
     def __init__(self, src_file_spec: str, output_file: str = None, dpi: int = 0, threads: int = 0,
-                 output_folder: int = '.', extension: int = None, **kwargs) -> None:
+                 output_folder: str = '.', extension: int = None, **kwargs) -> None:
         """
         Init - Super() does most work, but needed to add class name, which is used when throwing exceptions.
 

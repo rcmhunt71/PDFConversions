@@ -2,12 +2,11 @@
 
 import os
 from time import perf_counter
-import typing
 
 from PIL import Image
 
-from base_image_converter import BaseImageFormatConverter
-from file_extensions import SupportedDocTypes
+from pdf_conversion.converters.base_image_converter import BaseImageFormatConverter
+from pdf_conversion.documents.file_extensions import SupportedDocTypes
 
 
 class TiffToWebp(BaseImageFormatConverter):
@@ -58,23 +57,12 @@ class TiffToWebp(BaseImageFormatConverter):
             with Image.open(self.src_file_spec) as IMAGE:
                 IMAGE.save(webp_filespec, lossless=self.lossless, quality=self.quality)
             self.conversion_duration = perf_counter() - start_time
-            print(f"{self.__class__.__name__}: "
+            print(f"\t{self.__class__.__name__}: "
                   f"Conversion to {self.IMAGE_FORMAT}: {self.conversion_duration:0.3f} seconds")
-            print(f"{self.__class__.__name__}: "
+            print(f"\t{self.__class__.__name__}: "
                   f"LOSSLESS? {str(self.lossless)}    QUALITY: {self.quality}%")
         except OSError as exc:
             print(f"{self.__class__.__name__}: ERROR: Unable to convert '{self.src_file_spec}: {exc}")
         else:
             self.images.append(webp_filespec)
         return self
-
-
-if __name__ == '__main__':
-    file = '/home/rhunt/PycharmProjects/Pdf2Tiff/src/tiffs/pdf2tiff/d1be3efc-8974-4019-a7cc-132ff4d0d1c8-23.tif'
-
-    converter = TiffToWebp(src_file_spec=file).convert()
-
-    print(f"IMAGE: {converter.images}")
-    print(f"DURATION: {converter.conversion_duration:0.4f} seconds")
-    print(f"LOSSLESS? {str(converter.lossless)}")
-    print(f"QUALITY: {str(converter.quality)}")
