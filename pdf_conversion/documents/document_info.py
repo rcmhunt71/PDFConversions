@@ -6,7 +6,7 @@ import typing
 from pdf_conversion.documents.file_extensions import SupportedDocTypes
 
 
-class Document:
+class DocumentInfo:
     """
     Stores basic information about source PDF file, and all conversion info (type, time elapsed during the
     conversion process, resulting intermediary and final image locations)

@@ -1,8 +1,6 @@
-#!/usr/bin/python
-
 import typing
 
-from pdf_conversion.documents.document import Document
+from pdf_conversion.documents.document_info import DocumentInfo
 from pdf_conversion.documents.file_extensions import SupportedDocTypes
 from pdf_conversion.converters.pdf2tiff import PdfToTiff
 from pdf_conversion.converters.tiff2webp import TiffToWebp
@@ -19,7 +17,7 @@ class PDFConversion:
     routines are needed, based on the extension provided.
     """
 
-    def __init__(self, document: Document, image_format: SupportedDocTypes.NOT_DEFINED) -> None:
+    def __init__(self, document: DocumentInfo, image_format: SupportedDocTypes.NOT_DEFINED) -> None:
         """
         :param document: Instantiated Document object (contains filespec, used for tracking conversion process)
         :param image_format: Convert image from PDF to specified format.
