@@ -17,7 +17,7 @@ class PDFConversion:
     routines are needed, based on the extension provided.
     """
 
-    def __init__(self, document: DocumentInfo, image_format: SupportedDocTypes.NOT_DEFINED) -> None:
+    def __init__(self, document: DocumentInfo, image_format: SupportedDocTypes = SupportedDocTypes.NOT_DEFINED) -> None:
         """
         :param document: Instantiated Document object (contains filespec, used for tracking conversion process)
         :param image_format: Convert image from PDF to specified format.
