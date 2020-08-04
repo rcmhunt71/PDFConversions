@@ -1,4 +1,4 @@
-import typing
+from typing import Optional
 
 
 class BaseImageFormatConverter:
@@ -8,8 +8,9 @@ class BaseImageFormatConverter:
     DEFAULT_DPI = 200
     DEFAULT_THREADS = 1
 
-    def __init__(self, src_file_spec: str, output_file: str = None, dpi: int = 0, threads: int = 0,
-                 output_folder: str = '.', extension: int = None, **kwargs) -> None:
+    def __init__(self, src_file_spec: str, output_file: Optional[str] = None, dpi: Optional[int] = 0,
+                 threads: Optional[int] = 0, output_folder: Optional[str] = '.', extension: Optional[int] = None,
+                 **kwargs) -> None:
         """
         :param src_file_spec: File path and file name of the source file.
         :param output_file: Base filename for output image file names.
@@ -38,7 +39,7 @@ class BaseImageFormatConverter:
         # Used for providing which class through an exception.
         self.images = []
 
-    def convert(self) -> typing.NoReturn:
+    def convert(self):
         # Implemented instance of this function should return the instance of the obj
         # e.g. -
         # def convert():

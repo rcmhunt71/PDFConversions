@@ -1,4 +1,4 @@
-import typing
+from typing import NoReturn
 
 from pdf_conversion.documents.document_info import DocumentInfo
 from pdf_conversion.documents.file_extensions import SupportedDocTypes
@@ -36,7 +36,7 @@ class PDFConversion:
         self.image_format = image_format
         return self
 
-    def convert(self, doc_format: SupportedDocTypes = SupportedDocTypes.NOT_DEFINED, **kwargs) -> typing.NoReturn:
+    def convert(self, doc_format: SupportedDocTypes = SupportedDocTypes.NOT_DEFINED, **kwargs) -> NoReturn:
         """
         Convert the pdf to the desired format (either specified at method invocation or stored at the object level)
         :param doc_format: [OPTIONAL] - SupportedDocType enumeration, DEFAULT = NOT_DEFINED
@@ -65,7 +65,7 @@ class PDFConversion:
         if doc_format == SupportedDocTypes.WEBP:
             self._convert_tiff_to_webp(**kwargs)
 
-    def _convert_pdf_to_tiff(self, **kwargs) -> typing.NoReturn:
+    def _convert_pdf_to_tiff(self, **kwargs) -> NoReturn:
         """
         Call PDF to TIFF libraries.
 

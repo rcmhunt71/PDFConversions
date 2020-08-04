@@ -1,5 +1,6 @@
 import os
 from time import perf_counter
+from typing import Optional
 
 from PIL import Image
 
@@ -18,9 +19,9 @@ class TiffToWebp(BaseImageFormatConverter):
     LOSSLESS = True
     DEFAULT_QUALITY = 90
 
-    def __init__(self, src_file_spec: str, output_file: str = None, dpi: int = 0, threads: int = 0,
-                 output_folder: str = '.', extension: str = None, lossless: bool = None, quality: int = -1,
-                 **kwargs) -> None:
+    def __init__(self, src_file_spec: str, output_file: Optional[str] = None, dpi: Optional[int] = 0,
+                 threads: Optional[int] = 0, output_folder: Optional[str] = '.', extension: Optional[str] = None,
+                 lossless: Optional[bool] = None, quality: Optional[int] = -1, **kwargs) -> None:
         """
         Init - Super() does most of the work; this class's __init__() stores conversion specific options.
 
