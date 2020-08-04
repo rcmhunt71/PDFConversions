@@ -7,9 +7,9 @@ class CommandLine:
 
     DEFAULT_DPI = 100
     DEFAULT_QUALITY = 90
-    TARGET_FORMAT = SupportedDocTypes.WEBP.value
+    TARGET_FORMAT = SupportedDocTypes.WEBP
 
-    CONV_TYPES = dict([(doc_type.name, doc_type.value) for doc_type in SupportedDocTypes if
+    CONV_TYPES = dict([(doc_type.value, doc_type.name) for doc_type in SupportedDocTypes if
                        not doc_type.name.lower().startswith("not")])
 
     def __init__(self):
@@ -24,13 +24,14 @@ class CommandLine:
                                  type=int)
         self.parser.add_argument("-f", "--format",
                                  help=f"Conversion Format. Supported Formats: "
-                                      f"{', '.join(sorted(list(self.CONV_TYPES.values())))}  "
-                                      f"(Default: {self.TARGET_FORMAT})",
-                                 default=self.TARGET_FORMAT,
+                                      f"{', '.join(sorted(list(self.CONV_TYPES.keys())))}  "
+                                      f"(Default: {self.TARGET_FORMAT.value})",
+                                 default=self.TARGET_FORMAT.value,
                                  type=str)
         self.args = self.parser.parse_args()
         self.args.doc_format = self._validate_doc_format_type()
 
     def _validate_doc_format_type(self):
-        return (self.CONV_TYPES[self.args.format.lower()] if self.args.format.lower() in self.CONV_TYPES else
-                self.CONV_TYPES[CommandLine.TARGET_FORMAT])
+        enum_name = (self.CONV_TYPES[self.args.format.lower()] if self.args.format.lower() in self.CONV_TYPES.keys()
+                     else self.TARGET_FORMAT.name)
+        return getattr(SupportedDocTypes, enum_name)
