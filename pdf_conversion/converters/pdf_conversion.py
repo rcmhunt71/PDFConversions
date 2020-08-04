@@ -80,7 +80,7 @@ class PDFConversion:
         self.document.files.extend(converter.images)
         self.document.conversion_duration = converter.conversion_duration
 
-    def _convert_tiff_to_webp(self, **kwargs) -> typing.NoReturn:
+    def _convert_tiff_to_webp(self, **kwargs) -> NoReturn:
         """
         Call TIFF to webp libraries.
 
@@ -101,5 +101,3 @@ class PDFConversion:
             converter.convert()
             self.document.files.extend(converter.images)
             self.document.conversion_duration += converter.conversion_duration
-
-
