@@ -11,9 +11,9 @@ image_dir = "../../data/tiffs/pdf2tiff"
 
 args = CommandLine().args
 
-print(f"DPI: {args.dpi}  Quality: {args.quality}  Convert To: {args.doc_type.value}")
+print(f"DPI: {args.dpi}  Quality: {args.quality}  Convert To: {args.doc_format.value}")
 pdf = DocumentInfo(file_spec=source_pdf, conversion_dir=image_dir)
-PDFConversion(pdf).convert(doc_format=args.doc_type, lossless=True, dpi=args.dpi, quality=args.quality)
+PDFConversion(pdf).convert(doc_format=args.doc_format, lossless=True, dpi=args.dpi, quality=args.quality)
 
 print(f"LIST OF TIFFs:\n{pdf.tiff}")
 print(f"LIST OF WEBPs:\n{pdf.webp}")
