@@ -60,3 +60,11 @@ class DocumentInfo:
 
         """
         return self._return_list_of_filespecs_of_file_format(SupportedDocTypes.WEBP)
+
+    def document_status(self):
+        output = f"SOURCE DOCUMENT: {self.filespec}\n"
+        output += f"LIST OF TIFFs:\n{self.tiff}\n"
+        output += f"LIST OF WEBPs:\n{self.webp}\n"
+        output += f"CONVERSION DURATION: {self.conversion_duration:0.4f} seconds\n"
+        output += f"CREATED DOC FORMATS: {self.get_format_types()}\n"
+        return output

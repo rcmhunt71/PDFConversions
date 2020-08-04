@@ -44,3 +44,7 @@ class CommandLine:
                   f"\t Using the default format: '{self.TARGET_FORMAT.name.lower()}'\n")
             enum_name = self.TARGET_FORMAT.name
         return getattr(SupportedDocTypes, enum_name)
+
+    def print_args(self):
+        print(f"DPI: {self.args.dpi}  Quality: {self.args.quality}  Lossless? {str(self.args.lossless)}")
+        print(f"Conversion Format: {self.args.doc_format.value}")
