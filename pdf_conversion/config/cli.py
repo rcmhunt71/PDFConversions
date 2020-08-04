@@ -28,10 +28,19 @@ class CommandLine:
                                       f"(Default: {self.TARGET_FORMAT.value})",
                                  default=self.TARGET_FORMAT.value,
                                  type=str)
+        self.parser.add_argument('-l', '--lossless',
+                                 help=f"Create lossless representation. Default=False",
+                                 action='store_true',
+                                 default=False)
         self.args = self.parser.parse_args()
         self.args.doc_format = self._validate_doc_format_type()
 
     def _validate_doc_format_type(self):
-        enum_name = (self.CONV_TYPES[self.args.format.lower()] if self.args.format.lower() in self.CONV_TYPES.keys()
-                     else self.TARGET_FORMAT.name)
+        if self.args.format.lower() in self.CONV_TYPES.keys():
+            enum_name = self.CONV_TYPES[self.args.format.lower()]
+        else:
+            print(f"WARNING: Unrecognized conversion format: '{self.args.format.lower()}' -- "
+                  f"Supported formats: {', '.join(sorted(list(self.CONV_TYPES.keys())))}\n"
+                  f"\t Using the default format: '{self.TARGET_FORMAT.name.lower()}'\n")
+            enum_name = self.TARGET_FORMAT.name
         return getattr(SupportedDocTypes, enum_name)
