@@ -18,10 +18,6 @@ class CommandLine:
                                  help=f"Set conversion DPI (Default: {self.DEFAULT_DPI})",
                                  default=self.DEFAULT_DPI,
                                  type=int)
-        self.parser.add_argument("-q", "--quality",
-                                 help=f"Quality Factor [0, 100] (Default: {self.DEFAULT_QUALITY})",
-                                 default=self.DEFAULT_QUALITY,
-                                 type=int)
         self.parser.add_argument("-f", "--format",
                                  help=f"Conversion Format. Supported Formats: "
                                       f"{', '.join(sorted(list(self.CONV_TYPES.keys())))}  "
@@ -29,9 +25,15 @@ class CommandLine:
                                  default=self.TARGET_FORMAT.value,
                                  type=str)
         self.parser.add_argument('-l', '--lossless',
-                                 help=f"Create lossless representation. Default=False",
+                                 help=f"Create a lossless representation. Default=False",
                                  action='store_true',
                                  default=False)
+        self.parser.add_argument("-q", "--quality",
+                                 help=f"Quality Factor [0, 100], Compression value [0, 100] if lossless "
+                                      f"(Default: {self.DEFAULT_QUALITY})",
+                                 default=self.DEFAULT_QUALITY,
+                                 type=int)
+
         self.args = self.parser.parse_args()
         self.args.doc_format = self._validate_doc_format_type()
 
