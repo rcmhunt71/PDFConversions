@@ -4,11 +4,11 @@ import os
 import pdf2image
 import pdf2image.exceptions as pdf_exc
 
-from pdf_conversion.converters.base_image_converter import BaseImageFormatConverter
+from pdf_conversion.converters.image_converter import IImageFormatConverter
 from pdf_conversion.documents.file_extensions import SupportedDocTypes
 
 
-class PdfToTiff(BaseImageFormatConverter):
+class PdfToTiff(IImageFormatConverter):
     """
     PDF to TIFF conversion, using the 'pdf2image' python implementation.
     """

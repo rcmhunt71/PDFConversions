@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from abc import abc, abstractmethod
 import locale
 import os
 from time import perf_counter
@@ -8,7 +9,7 @@ import pdf2image
 import pdf2image.exceptions as pdf_exc
 
 
-class BasePDFConversion:
+class IPDFConversion(abc):
     """
     This is a simple base class, designed with the purpose of being able to compare different pdf-to-<image>
     implementation - by creating a common process for invocation. This would not be needed in a production
@@ -49,15 +50,16 @@ class BasePDFConversion:
         # Used for providing which class through an exception.
         self.name = __class__.__name__
 
+    @abstractmethod
     def convert_to_image(self):
         """
         Virtual definition for creating an image. Each child class should have a tool-specific implementation.
         :return:
         """
-        raise NotImplementedError
+        pass
 
 
-class PDFtoTiff(BasePDFConversion):
+class PDFtoTiff(IPDFConversion):
     """
     PDF to TIFF conversion, using the 'pdf2image' python implementation.
     """
@@ -139,7 +141,7 @@ class PDFtoPng(PDFtoTiff):
     IMAGE_EXTENSION = 'png'
 
 
-class GhostscriptPDF2Tiff(BasePDFConversion):
+class GhostscriptPDF2Tiff(IPDFConversion):
     """
     PDF to TIFF conversion, using the 'GhostScript' shared object implementation.
     """
@@ -228,7 +230,7 @@ if __name__ == '__main__':
         "pdf2tiff": PDFtoTiff
     }
 
-    # For each algorithm, convert the PDF 'iteration' times and record the conversions times.
+    # For each conversion algorithm, convert the PDF 'iteration' times and record the conversions times.
     for sub_path, conversion_class in sub_path_mapping.items():
 
         # Determine the output file spec

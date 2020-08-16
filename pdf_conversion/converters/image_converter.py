@@ -1,7 +1,8 @@
+from abc import ABC, abstractmethod
 from typing import Optional
 
 
-class BaseImageFormatConverter:
+class IImageFormatConverter(ABC):
 
     IMAGE_FORMAT = None
     IMAGE_EXTENSION = None
@@ -39,10 +40,17 @@ class BaseImageFormatConverter:
         # Used for providing which class through an exception.
         self.images = []
 
-    def convert(self):
-        # Implemented instance of this function should return the instance of the obj
-        # e.g. -
-        # def convert():
-        #   <code>
-        #   return self
-        raise NotImplementedError
+    @abstractmethod
+    def convert(self) -> "IImageFormatConverter":
+        """
+        Implemented instance of this function should return the instance of the obj
+        e.g. -
+
+        def convert():
+          <code>
+          return self
+
+        :return:
+            self
+        """
+        pass

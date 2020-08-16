@@ -4,11 +4,11 @@ from typing import Optional
 
 from PIL import Image
 
-from pdf_conversion.converters.base_image_converter import BaseImageFormatConverter
+from pdf_conversion.converters.image_converter import IImageFormatConverter
 from pdf_conversion.documents.file_extensions import SupportedDocTypes
 
 
-class TiffToWebp(BaseImageFormatConverter):
+class TiffToWebp(IImageFormatConverter):
     IMAGE_FORMAT = SupportedDocTypes.WEBP.value
     IMAGE_EXTENSION = SupportedDocTypes.WEBP.value
 

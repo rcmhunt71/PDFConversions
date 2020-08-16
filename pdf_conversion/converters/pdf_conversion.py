@@ -13,7 +13,7 @@ class NoTargetConversionType(Exception):
 
 class PDFConversion:
     """
-    Primary class for converting PDF to specified images. Contained basic logic for determining which conversion
+    Primary class for converting PDF to specified images. Contains basic logic for determining which conversion
     routines are needed, based on the extension provided.
     """
 
@@ -49,20 +49,21 @@ class PDFConversion:
 
         # Get the desired target format (specified at method call or or at object level)
         doc_format = doc_format or self.image_format
-        if doc_format is None or doc_format.value is None:
+        if doc_format is None or not isinstance(doc_format, SupportedDocTypes) or doc_format.value is None:
             raise NoTargetConversionType
 
-        # If target format matches current format; no op. (At this point, it must be defined doc type)
+        # If target format matches the current format; no op. (At this point, it must be defined doc type)
         if self.document.doc_type.lower() == doc_format.value:
             print(f"Target Format ('{doc_format.value}') matches the current document type. Nothing to do.")
             return self
 
-        # For PDF to TIFF or PDF to WEBP, both need to be in the TIFF format first.
-        if doc_format in [SupportedDocTypes.WEBP, SupportedDocTypes.TIFF]:
+        # For PDF to TIFF.
+        if doc_format == SupportedDocTypes.TIFF:
             self._convert_pdf_to_tiff(**kwargs)
 
-        # Conversion to webp format (from intermediate TIFF format)
-        if doc_format == SupportedDocTypes.WEBP:
+        # For PDF to webp format (with intermediate TIFF format)
+        elif doc_format == SupportedDocTypes.WEBP:
+            self._convert_pdf_to_tiff(**kwargs)
             self._convert_tiff_to_webp(**kwargs)
 
     def _convert_pdf_to_tiff(self, **kwargs) -> NoReturn:
