@@ -10,6 +10,7 @@ import yaml
 class CommandLine:
 
     DEFAULTS_CFG_FILE = "defaults.cfg"
+
     DEFAULT_CFG_DIR = "."
     DEFAULT_DPI = 100
     DEFAULT_QUALITY = 90
