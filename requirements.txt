@@ -1,4 +1,5 @@
 pdf2image
+pyyaml
 
 # External Requirements
 # Poppler (Refer to link for more details: https://pdf2image.readthedocs.io/en/latest/installation.html)

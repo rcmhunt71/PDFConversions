@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     # url="https://github.com/pypa/sampleproject",
-    install_requires=['ghostscript', 'pdf2image', 'Pillow'],
+    install_requires=['ghostscript', 'pdf2image', 'Pillow', 'PyYaml'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
