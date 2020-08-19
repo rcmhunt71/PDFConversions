@@ -8,3 +8,5 @@ pdf2image
 # python3-ghostscript
 # External Requirements
 # https://www.ghostscript.com/
+
+pillow
