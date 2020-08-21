@@ -17,8 +17,11 @@ class TiffToWebp(IImageFormatConverter):
     # If not LOSSLESS, DEFAULT_QUALITY = 0 (smallest size) to 100 = (largest size)
     # REFERENCE: https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html?highlight=webp#webp
     LOSSLESS = True
-    DEFAULT_QUALITY = 90
     QUALITY_KW = 'quality'
+    DEFAULT_QUALITY = 90
+
+    DPI_KW = 'dpi'
+    DEFAULT_DPI = 200
 
     def __init__(
             self, src_file_spec: str, output_file: typing.Optional[str] = None, dpi: typing.Optional[int] = 0,
@@ -45,9 +48,10 @@ class TiffToWebp(IImageFormatConverter):
         super().__init__(src_file_spec=src_file_spec, output_file=output_file, output_folder=output_folder,
                          extension=extension, dpi=dpi, threads=threads)
         self.lossless = lossless if lossless is not None else self.LOSSLESS
+        self.quality = quality
         defaults = defaults or {}
-        self.quality = kwargs.get(self.QUALITY_KW, -1)
-        if quality < 0:
+
+        if self.quality < 0:
             self.quality = defaults.get(self.QUALITY_KW, self.DEFAULT_QUALITY)
 
     def convert(self) -> "TiffToWebp":

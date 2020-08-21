@@ -17,6 +17,7 @@ cli.print_args()
 pdf = DocumentInfo(file_spec=source_pdf, conversion_dir=cli.args.image_dir)
 
 PDFConversion(document=pdf, defaults=defaults).convert(
-    doc_format=cli.args.doc_format, lossless=cli.args.lossless, dpi=cli.args.dpi, quality=cli.args.quality)
+    doc_format=cli.args.doc_format, lossless=cli.args.lossless, dpi=cli.args.dpi, quality=cli.args.quality,
+    threads=cli.args.threads)
 #
 # print(pdf.document_status())

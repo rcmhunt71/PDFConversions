@@ -24,13 +24,11 @@ class PdfToTiff(IImageFormatConverter):
 
         super().__init__(
             src_file_spec=src_file_spec, output_file=output_file, output_folder=output_folder,
-            threads=threads, extension=extension, dpi=dpi)
+            extension=extension, dpi=dpi)
 
         defaults = defaults or {}
-        if self.dpi < 1:
-            self.dpi = defaults.get('dpi', self.DEFAULT_DPI)
-        if self.threads < 1:
-            self.threads = defaults.get('threads', self.DEFAULT_THREADS)
+        self.dpi = dpi if dpi > 0 else defaults.get('dpi', self.DEFAULT_DPI)
+        self.threads = threads if threads > 0 else defaults.get('threads', self.DEFAULT_THREADS)
 
     def convert(self) -> "PdfToTiff":
         """

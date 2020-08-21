@@ -11,7 +11,8 @@ class CommandLine:
     DEFAULT_DPI = 200
     DEFAULT_QUALITY = 90
     DEFAULT_FORMAT = SupportedDocTypes.WEBP
-    DEFAULT_LOSSLESS = False
+    DEFAULT_LOSSLESS = True
+    DEFAULT_THREADS = 4
 
     CONV_TYPES = dict([(doc_type.value, doc_type.name) for doc_type in SupportedDocTypes if
                        not doc_type.name.lower().startswith("not")])
@@ -41,8 +42,12 @@ class CommandLine:
                                  help=f"Set conversion DPI (Default: {self.DEFAULT_DPI})",
                                  default=-1,
                                  type=int)
-        self.parser.add_argument('-l', '--lossless',
-                                 help=f"Create a lossless representation. Default={self.DEFAULT_LOSSLESS}",
+        self.parser.add_argument("-t", "--threads",
+                                 help=f"Set number of processing threads (tiff). Default: {self.DEFAULT_THREADS}",
+                                 default=-1,
+                                 type=int)
+        self.parser.add_argument('-l', '--not_lossless',
+                                 help=f"Do not create a lossless representation, if applicable.",
                                  action='store_true',
                                  default=self.DEFAULT_LOSSLESS)
         self.parser.add_argument("-q", "--quality",
@@ -56,6 +61,7 @@ class CommandLine:
                                  type=str)
 
         self.args = self.parser.parse_args()
+        self.args.lossless = not self.args.not_lossless
         self.args.doc_format = self._validate_doc_format_type()
 
     def _validate_doc_format_type(self) -> SupportedDocTypes:
@@ -81,9 +87,13 @@ class CommandLine:
 
         :return: None
         """
+        border = '-' * 80
+        print(border)
         print(f"Conversion Format: {self.args.doc_format.value}")
-        print(f"DPI: {self.args.dpi}  Quality: {self.args.quality}  Lossless? {str(self.args.lossless)}")
+        print(f"TIFF --> DPI: {self.args.dpi}  Threads: {self.args.threads}")
+        print(f"WEBP --> Quality: {self.args.quality}  Lossless? {str(not self.args.not_lossless)}")
         print(f"Image Directory: {os.path.abspath(self.args.image_dir)} (Provided [raw]: '{self.args.image_dir}')")
+        print(border)
 
     def _set_defaults(self, config: typing.Dict[any, any]) -> typing.NoReturn:
         """

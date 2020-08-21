@@ -50,7 +50,6 @@ class PDFConversion:
         :return: None
 
         """
-
         # Get the desired target format (specified at method call or or at object level)
         doc_format = doc_format or self.image_format
         if doc_format is None or not isinstance(doc_format, SupportedDocTypes) or doc_format.value is None:
