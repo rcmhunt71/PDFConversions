@@ -89,7 +89,7 @@ class CommandLine:
         """
         border = '-' * 80
         print(border)
-        print(f"Conversion Format: {self.args.doc_format.value}")
+        print(f"FORMAT: {self.args.doc_format.value}")
         print(f"TIFF --> DPI: {self.args.dpi}  Threads: {self.args.threads}")
         print(f"WEBP --> Quality: {self.args.quality}  Lossless? {str(not self.args.not_lossless)}")
         print(f"Image Directory: {os.path.abspath(self.args.image_dir)} (Provided [raw]: '{self.args.image_dir}')")
