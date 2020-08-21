@@ -1,5 +1,6 @@
-from time import perf_counter
 import os
+from time import perf_counter
+import typing
 
 import pdf2image
 import pdf2image.exceptions as pdf_exc
@@ -16,6 +17,20 @@ class PdfToTiff(IImageFormatConverter):
     IMAGE_EXTENSION = SupportedDocTypes.TIFF.value
     DEFAULT_DPI = 200
     DEFAULT_THREADS = 4
+
+    def __init__(self, src_file_spec: str, output_file: typing.Optional[str] = None, dpi: typing.Optional[int] = 0,
+                 threads: typing.Optional[int] = 0, output_folder: typing.Optional[str] = '.',
+                 extension: typing.Optional[int] = None, defaults: typing.Optional[dict] = None, **kwargs):
+
+        super().__init__(
+            src_file_spec=src_file_spec, output_file=output_file, output_folder=output_folder,
+            threads=threads, extension=extension, dpi=dpi)
+
+        defaults = defaults or {}
+        if self.dpi < 1:
+            self.dpi = defaults.get('dpi', self.DEFAULT_DPI)
+        if self.threads < 1:
+            self.threads = defaults.get('threads', self.DEFAULT_THREADS)
 
     def convert(self) -> "PdfToTiff":
         """

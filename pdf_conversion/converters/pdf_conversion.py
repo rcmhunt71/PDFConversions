@@ -1,7 +1,8 @@
-from typing import NoReturn
+import typing
 
 from pdf_conversion.documents.document_info import DocumentInfo
 from pdf_conversion.documents.file_extensions import SupportedDocTypes
+from pdf_conversion.config.defaults import DefaultValues
 from pdf_conversion.converters.pdf2tiff import PdfToTiff
 from pdf_conversion.converters.tiff2webp import TiffToWebp
 
@@ -17,14 +18,17 @@ class PDFConversion:
     routines are needed, based on the extension provided.
     """
 
-    def __init__(self, document: DocumentInfo, image_format: SupportedDocTypes = SupportedDocTypes.NOT_DEFINED) -> None:
+    def __init__(self, document: DocumentInfo, image_format: SupportedDocTypes = SupportedDocTypes.NOT_DEFINED,
+                 defaults: typing.Optional[DefaultValues] = None) -> None:
         """
         :param document: Instantiated Document object (contains filespec, used for tracking conversion process)
         :param image_format: Convert image from PDF to specified format.
+        :param defaults: A dictionary of defaults for each image type (optional)
 
         """
         self.document = document
         self.image_format = image_format
+        self.defaults = defaults
 
     def set_image_format(self, image_format: SupportedDocTypes):
         """
@@ -36,7 +40,7 @@ class PDFConversion:
         self.image_format = image_format
         return self
 
-    def convert(self, doc_format: SupportedDocTypes = SupportedDocTypes.NOT_DEFINED, **kwargs) -> NoReturn:
+    def convert(self, doc_format: SupportedDocTypes = SupportedDocTypes.NOT_DEFINED, **kwargs) -> typing.NoReturn:
         """
         Convert the pdf to the desired format (either specified at method invocation or stored at the object level)
         :param doc_format: [OPTIONAL] - SupportedDocType enumeration, DEFAULT = NOT_DEFINED
@@ -59,29 +63,38 @@ class PDFConversion:
 
         # For PDF to TIFF.
         if doc_format == SupportedDocTypes.TIFF:
-            self._convert_pdf_to_tiff(**kwargs)
+            defaults_dict = getattr(self.defaults, DefaultValues.TIFF_DEFAULTS) if self.defaults is not None else {}
+            self._convert_pdf_to_tiff(defaults_dict, **kwargs)
 
         # For PDF to webp format (with intermediate TIFF format)
         elif doc_format == SupportedDocTypes.WEBP:
-            self._convert_pdf_to_tiff(**kwargs)
-            self._convert_tiff_to_webp(**kwargs)
+            defaults_dict = getattr(self.defaults, DefaultValues.TIFF_DEFAULTS) if self.defaults is not None else {}
+            self._convert_pdf_to_tiff(defaults_dict, **kwargs)
 
-    def _convert_pdf_to_tiff(self, **kwargs) -> NoReturn:
+            defaults_dict = getattr(self.defaults, DefaultValues.WEBP_DEFAULTS) if self.defaults is not None else {}
+            self._convert_tiff_to_webp(defaults_dict, **kwargs)
+
+    def _convert_pdf_to_tiff(self, defaults: typing.Optional[dict] = None, **kwargs) -> typing.NoReturn:
         """
         Call PDF to TIFF libraries.
 
+        :param defaults: a Dictionary of tiff specific defaults (See PdfToTiff class for DEFAULT_* parameters)
         :param kwargs: Additional args available to conversion process (beyond standard BaseClass args)
             * Currently no additional args defined.
 
         :return: None
 
         """
-        converter = PdfToTiff(src_file_spec=self.document.filespec, output_folder=self.document.file_dir, **kwargs)
+        converter = PdfToTiff(src_file_spec=self.document.filespec, output_folder=self.document.file_dir,
+                              defaults=defaults, **kwargs)
+
         converter.convert()
+        self._print_attribute_settings(converter)
+
         self.document.files.extend(converter.images)
         self.document.conversion_duration = converter.conversion_duration
 
-    def _convert_tiff_to_webp(self, **kwargs) -> NoReturn:
+    def _convert_tiff_to_webp(self, defaults: typing.Optional[dict] = None, **kwargs) -> typing.NoReturn:
         """
         Call TIFF to webp libraries.
 
@@ -98,7 +111,23 @@ class PDFConversion:
 
         # Convert each image, and store the information in the Document metadata.
         for image in tiffs:
-            converter = TiffToWebp(src_file_spec=image, output_folder=self.document.file_dir, **kwargs)
+            converter = TiffToWebp(
+                src_file_spec=image, defaults=defaults, output_folder=self.document.file_dir, **kwargs)
+
             converter.convert()
+            self._print_attribute_settings(converter)
+
             self.document.files.extend(converter.images)
             self.document.conversion_duration += converter.conversion_duration
+
+    @staticmethod
+    def _print_attribute_settings(target_obj: typing.Any) -> typing.NoReturn:
+        """
+        Prints all non-callable, non-capitalized, non-reserved attributes within the specified obj
+        :param target_obj: Instantiated obj
+        :return: None
+        """
+        for attribute in dir(target_obj):
+            if (not attribute.startswith('_') and not callable(getattr(target_obj, attribute)) and
+                    not attribute == attribute.upper()):
+                print(f"{target_obj.IMAGE_FORMAT} attribute: {attribute} = {getattr(target_obj, attribute)}")

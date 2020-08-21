@@ -1,17 +1,18 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+import typing
+
+from pdf_conversion.config.defaults import DefaultValues
 
 
 class IImageFormatConverter(ABC):
 
     IMAGE_FORMAT = None
     IMAGE_EXTENSION = None
-    DEFAULT_DPI = 200
-    DEFAULT_THREADS = 1
 
-    def __init__(self, src_file_spec: str, output_file: Optional[str] = None, dpi: Optional[int] = 0,
-                 threads: Optional[int] = 0, output_folder: Optional[str] = '.', extension: Optional[int] = None,
-                 **kwargs) -> None:
+    def __init__(
+            self, src_file_spec: str, output_file: typing.Optional[str] = None, dpi: typing.Optional[int] = 0,
+            threads: typing.Optional[int] = 0, output_folder: typing.Optional[str] = '.',
+            extension: typing.Optional[int] = None, **kwargs) -> None:
         """
         :param src_file_spec: File path and file name of the source file.
         :param output_file: Base filename for output image file names.
@@ -25,8 +26,9 @@ class IImageFormatConverter(ABC):
         self.src_file_spec = src_file_spec
         self.output_file = output_file
         self.output_folder = output_folder
-        self.dpi = dpi if dpi > 0 else self.DEFAULT_DPI
-        self.threads = threads if threads > 0 else self.DEFAULT_THREADS
+
+        self.dpi = dpi
+        self.threads = threads
         self.fmt = self.IMAGE_FORMAT
         self.extension = extension or self.IMAGE_EXTENSION
 
@@ -39,6 +41,19 @@ class IImageFormatConverter(ABC):
 
         # Used for providing which class through an exception.
         self.images = []
+
+    # def _set_default(self, defaults: DefaultValues, attribute: str) -> typing.NoReturn:
+    #     if defaults is None:
+    #         return
+    #
+    #     image_default = getattr(defaults, defaults.TIFF_DEFAULTS).get(attribute, -1)
+    #     app_default = getattr(defaults, defaults.APP_DEFAULTS).get(attribute, -1)
+    #
+    #     setattr(self, attribute, getattr(self, f"DEFAULT_{attribute.upper()}"))
+    #     if image_default > 0:
+    #         setattr(self, attribute, image_default)
+    #     elif app_default > 0:
+    #         setattr(self, attribute, app_default)
 
     @abstractmethod
     def convert(self) -> "IImageFormatConverter":

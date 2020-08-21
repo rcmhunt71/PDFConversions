@@ -1,6 +1,6 @@
 import os
 from time import perf_counter
-from typing import Optional
+import typing
 
 from PIL import Image
 
@@ -18,10 +18,14 @@ class TiffToWebp(IImageFormatConverter):
     # REFERENCE: https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html?highlight=webp#webp
     LOSSLESS = True
     DEFAULT_QUALITY = 90
+    QUALITY_KW = 'quality'
 
-    def __init__(self, src_file_spec: str, output_file: Optional[str] = None, dpi: Optional[int] = 0,
-                 threads: Optional[int] = 0, output_folder: Optional[str] = '.', extension: Optional[str] = None,
-                 lossless: Optional[bool] = None, quality: Optional[int] = -1, **kwargs) -> None:
+    def __init__(
+            self, src_file_spec: str, output_file: typing.Optional[str] = None, dpi: typing.Optional[int] = 0,
+            threads: typing.Optional[int] = 0, output_folder: typing.Optional[str] = '.',
+            extension: typing.Optional[str] = None, lossless: typing.Optional[bool] = None,
+            quality: typing.Optional[int] = -1, defaults: typing.Optional[dict] = None, **kwargs) -> None:
+
         """
         Init - Super() does most of the work; this class's __init__() stores conversion specific options.
 
@@ -41,7 +45,10 @@ class TiffToWebp(IImageFormatConverter):
         super().__init__(src_file_spec=src_file_spec, output_file=output_file, output_folder=output_folder,
                          extension=extension, dpi=dpi, threads=threads)
         self.lossless = lossless if lossless is not None else self.LOSSLESS
-        self.quality = quality if quality > -1 else self.DEFAULT_QUALITY
+        defaults = defaults or {}
+        self.quality = kwargs.get(self.QUALITY_KW, -1)
+        if quality < 0:
+            self.quality = defaults.get(self.QUALITY_KW, self.DEFAULT_QUALITY)
 
     def convert(self) -> "TiffToWebp":
         """
@@ -64,7 +71,7 @@ class TiffToWebp(IImageFormatConverter):
                   f"LOSSLESS? {str(self.lossless)}    QUALITY: {self.quality}%")
 
         except OSError as exc:
-            print(f"{self.__class__.__name__}: ERROR: Unable to convert '{self.src_file_spec}: {exc}")
+            print(f"{self.__class__.__name__}: ERROR: Unable to convert '{self.src_file_spec}': {exc}")
 
         else:
             self.images.append(webp_filespec)
