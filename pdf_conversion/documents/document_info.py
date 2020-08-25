@@ -11,7 +11,12 @@ class DocumentInfo:
     Stores basic information about source PDF file, and all conversion info (type, time elapsed during the
     conversion process, resulting intermediary and final image locations)
     """
-    def __init__(self, file_spec: str, conversion_dir: str = None):
+    def __init__(self, file_spec: str, conversion_dir: str = None) -> typing.NoReturn:
+        """
+        Constructor for DocumentInfo
+        :param file_spec: File spec (path and filename) of original document
+        :param conversion_dir: File path to store converted documents
+        """
         self.filespec = os.path.abspath(file_spec)
         self.file_dir = os.path.abspath(conversion_dir) or os.path.split(self.filespec)[0]
         self.filename = self.filespec.split(os.path.sep)[-1]
@@ -42,7 +47,7 @@ class DocumentInfo:
         return [file_ for file_ in self.files if file_.lower().endswith(file_format.value.lower())]
 
     @property
-    def tiff(self):
+    def tiff(self) -> typing.List[str]:
         """
         Return all file specs that are in the TIFF format.
 
@@ -52,7 +57,7 @@ class DocumentInfo:
         return self._return_list_of_filespecs_of_file_format(SupportedDocTypes.TIFF)
 
     @property
-    def webp(self):
+    def webp(self) -> typing.List[str]:
         """
         Return all file specs that are in the webp format.
 
@@ -61,7 +66,7 @@ class DocumentInfo:
         """
         return self._return_list_of_filespecs_of_file_format(SupportedDocTypes.WEBP)
 
-    def document_status(self):
+    def document_status(self) -> str:
         output = f"SOURCE DOCUMENT: {self.filespec}\n"
         output += f"LIST OF TIFFs:\n{self.tiff}\n"
         output += f"LIST OF WEBPs:\n{self.webp}\n"
