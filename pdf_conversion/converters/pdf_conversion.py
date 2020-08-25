@@ -30,7 +30,7 @@ class PDFConversion:
         self.image_format = image_format
         self.defaults = defaults
 
-    def set_image_format(self, image_format: SupportedDocTypes):
+    def set_image_format(self, image_format: SupportedDocTypes) -> "PDFConversion":
         """
         Set or update the target image format to convert PDF
         :param image_format: Target image format (SupportedDocTypes enumeration)

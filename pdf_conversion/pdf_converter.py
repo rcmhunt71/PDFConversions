@@ -5,7 +5,7 @@ from pdf_conversion.config.defaults import DefaultValues
 from pdf_conversion.converters.pdf_conversion import PDFConversion
 from pdf_conversion.documents.document_info import DocumentInfo
 
-source_pdf = "../../data/pdfs/small.pdf"
+source_pdf = "../../data/pdfs/ddmdp.pdf"
 default_cfg = './defaults.cfg'
 
 defaults = DefaultValues(filespec=default_cfg)
