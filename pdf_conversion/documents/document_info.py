@@ -11,7 +11,7 @@ class DocumentInfo:
     Stores basic information about source PDF file, and all conversion info (type, time elapsed during the
     conversion process, resulting intermediary and final image locations)
     """
-    def __init__(self, file_spec: str, conversion_dir: str = None) -> typing.NoReturn:
+    def __init__(self, file_spec: str, conversion_dir: str = None) -> None:
         """
         Constructor for DocumentInfo
         :param file_spec: File spec (path and filename) of original document

@@ -20,7 +20,19 @@ class PdfToTiff(IImageFormatConverter):
 
     def __init__(self, src_file_spec: str, output_file: typing.Optional[str] = None, dpi: typing.Optional[int] = 0,
                  threads: typing.Optional[int] = 0, output_folder: typing.Optional[str] = '.',
-                 extension: typing.Optional[int] = None, defaults: typing.Optional[dict] = None, **kwargs):
+                 extension: typing.Optional[int] = None, defaults: typing.Optional[dict] = None, **kwargs) -> None:
+        """
+        PdfToTiff Constructor
+        :param src_file_spec: File spec (path + name) of file to convert
+        :param output_file: Name or template to use as converted output filename(s)
+        :param dpi: Dots Per Inch resolution
+        :param threads: Number of threads to use in converting PDP to tiff (recommended: max of 4)
+        :param output_folder: Path to directory where output files are located
+        :param extension: extension of output file
+        :param defaults: image conversion default (read from file, used if specific values are not provided)
+        :param kwargs: any extra arguments (used as a catch all for other arguments - based on inheritance
+              from parent class)
+        """
 
         super().__init__(
             src_file_spec=src_file_spec, output_file=output_file, output_folder=output_folder,

@@ -17,7 +17,7 @@ class CommandLine:
     CONV_TYPES = dict([(doc_type.value, doc_type.name) for doc_type in SupportedDocTypes if
                        not doc_type.name.lower().startswith("not")])
 
-    def __init__(self, defaults_dict: typing.Optional[dict] = None):
+    def __init__(self, defaults_dict: typing.Optional[dict] = None) -> None:
         """
         Sets up the CLI arguments.
         NOTE: If an option is added or removed, be sure to update CommandLine.print_args() to reflect the change.

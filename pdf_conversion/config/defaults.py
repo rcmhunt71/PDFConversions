@@ -11,7 +11,7 @@ class DefaultValues:
     TIFF_DEFAULTS = 'tif'
     WEBP_DEFAULTS = 'webp'
 
-    def __init__(self, filespec: str = DEFAULTS_CFG_FILE) -> typing.NoReturn:
+    def __init__(self, filespec: str = DEFAULTS_CFG_FILE) -> None:
         """
         Default Values Constructor
         :param filespec: Filespec to read.
